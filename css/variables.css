@@ -1,0 +1,13 @@
+/* Variables globales */
+:root {
+  --max-width: 80rem;
+  --font-title: "DM Sans", sans-serif;
+  --font-text: "Anton", sans-serif;
+  --color-white: #ffffff;
+  --color-black: #222222;
+  --color-light-gray: #e7e7e7;
+  --color-accent: #d04f4f;
+  --color-ingredient: #3282f7;
+  --color-appliance: #68d9a4;
+  --color-ustensil: #ed6454;
+}

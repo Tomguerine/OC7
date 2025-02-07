@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "rootDir": "./scripts",
+    "outDir": "./dist",
+    "target": "ES2016",
+    "module": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["scripts"]
+}
