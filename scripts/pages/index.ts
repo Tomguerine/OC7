@@ -246,65 +246,6 @@ function updateSelectedTags(type: string, value: string): void {
   }
 }
 
-/******************************************************
- * Recherche fonctionnelle (version optimisée)
- ******************************************************/
-function performSearchFunctional(): void {
-  const mainSearchInput = document.getElementById(
-    "search-recipe"
-  ) as HTMLInputElement;
-  const searchText = mainSearchInput
-    ? mainSearchInput.value.toLowerCase().trim()
-    : "";
-  const tagElements = document.querySelectorAll(".selected-tags .tag");
-  const selectedFilters: { type: string; value: string }[] = [];
-  tagElements.forEach((tag) => {
-    const type = tag.getAttribute("data-type") || "";
-    const valueElement = tag.querySelector(".tag-value");
-    const value = valueElement
-      ? valueElement.textContent?.toLowerCase().trim() || ""
-      : "";
-    if (value) {
-      selectedFilters.push({ type, value });
-    }
-  });
-
-  let filteredRecipes = allRecipes;
-  if (searchText) {
-    filteredRecipes = filteredRecipes.filter((recipe) => {
-      return (
-        recipe.name.toLowerCase().includes(searchText) ||
-        recipe.description.toLowerCase().includes(searchText) ||
-        recipe.ingredients.some((ing) =>
-          ing.ingredient.toLowerCase().includes(searchText)
-        ) ||
-        recipe.appliance.toLowerCase().includes(searchText) ||
-        recipe.ustensils.some((ut) => ut.toLowerCase().includes(searchText))
-      );
-    });
-  }
-
-  selectedFilters.forEach((filter) => {
-    if (filter.type === "ingrédients" || filter.type === "ingrédient") {
-      filteredRecipes = filteredRecipes.filter((recipe) =>
-        recipe.ingredients.some((ing) =>
-          ing.ingredient.toLowerCase().includes(filter.value)
-        )
-      );
-    } else if (filter.type === "appareils" || filter.type === "appareil") {
-      filteredRecipes = filteredRecipes.filter((recipe) =>
-        recipe.appliance.toLowerCase().includes(filter.value)
-      );
-    } else if (filter.type === "ustensiles" || filter.type === "ustensile") {
-      filteredRecipes = filteredRecipes.filter((recipe) =>
-        recipe.ustensils.some((ut) => ut.toLowerCase().includes(filter.value))
-      );
-    }
-  });
-
-  displayData(filteredRecipes);
-}
-
 function performSearchImperative(): void {
   const mainSearchInput = document.getElementById(
     "search-recipe"
@@ -425,11 +366,7 @@ function performSearchImperative(): void {
  * Fonction de recherche principale (choix de la version)
  ******************************************************/
 function performSearch(): void {
-  if (useImperativeSearch) {
-    performSearchImperative();
-  } else {
-    performSearchFunctional();
-  }
+  performSearchImperative();
 }
 
 /******************************************************
