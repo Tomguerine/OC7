@@ -1,8 +1,8 @@
 @import url("variables.css");
 
-/* =====================================================
-   Reset et règles de base
-===================================================== */
+/* =============================
+   1. Réglages de base
+============================= */
 *,
 *::before,
 *::after {
@@ -18,9 +18,9 @@ body {
   background-color: #e5e5e5;
 }
 
-/* =====================================================
-   1. HEADER & BARRE DE RECHERCHE PRINCIPALE
-===================================================== */
+/* =============================
+   2. Header + Barre de recherche
+============================= */
 .header {
   background-color: #fff;
   padding: 1rem;
@@ -31,7 +31,7 @@ body {
 }
 
 .header_logo {
-  max-width: 150px; /* Ajustez la taille du logo si besoin */
+  max-width: 150px;
   margin-bottom: 1rem;
 }
 
@@ -40,20 +40,17 @@ body {
   text-align: center;
 }
 
-/* Titre principal selon la maquette Figma */
 .header-title {
   font-family: "Anton", sans-serif;
   color: #ffd15b;
   font-weight: 400;
   font-size: 44px;
   line-height: 66.24px;
-  letter-spacing: 0%;
   text-align: center;
   padding: 10px;
   margin: 0 auto 1rem;
 }
 
-/* Conteneur de la barre de recherche */
 .search-container {
   position: relative;
   width: 80%;
@@ -64,7 +61,7 @@ body {
 .search-container input[type="text"] {
   width: 100%;
   height: 48px;
-  padding: 0 50px 0 16px; /* Espace à droite pour l'icône */
+  padding: 0 50px 0 16px;
   border: 1px solid #e5e5e5;
   border-radius: 6px;
   font-size: 16px;
@@ -76,14 +73,14 @@ body {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 24px; /* Icône plus grande pour une meilleure visibilité */
+  font-size: 24px;
   color: #333;
   cursor: pointer;
 }
 
-/* =====================================================
-   2. CONTENEUR PRINCIPAL DES RECETTES
-===================================================== */
+/* =============================
+   3. Grille de recettes
+============================= */
 #recipe-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -92,9 +89,6 @@ body {
   margin: 0 auto;
 }
 
-/* =====================================================
-   3. CARTE DE RECETTE
-===================================================== */
 .recipe-card {
   position: relative;
   background: linear-gradient(to bottom, #ffffff, #e7e7e7);
@@ -149,6 +143,7 @@ body {
   font-variant: small-caps;
   margin: 0.5rem 0 0.25rem;
 }
+
 .recipe-ingredients-title {
   font-family: Manrope;
   font-weight: 700;
@@ -163,23 +158,30 @@ body {
   font-size: 14px;
   line-height: 19.12px;
   letter-spacing: 0%;
-  padding-top: 0px;
-  margin: 0px;
+  margin: 0;
 }
 
-/* Liste des ingrédients dans la recette :
-   Alignée à gauche avec un padding pour décaler le premier élément,
-   et un espace en bas */
+/* =============================
+   4. Liste d'ingrédients
+============================= */
 .recipe-ingredients {
   list-style: none;
-  padding-left: 0px;
+  padding: 0;
   margin: 0 0 1rem 0;
   column-count: 2;
   column-gap: 1rem;
 }
 
 .recipe-ingredients li {
+  /* Empêche de couper un ingrédient sur deux colonnes */
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+
+  /* Forcer l'empilement vertical du texte et du strong */
+  display: flex;
+  flex-direction: column;
+
   padding: 0.5rem 0;
   font-size: 14px;
   color: var(--color-black);
@@ -188,16 +190,21 @@ body {
   text-align: left;
 }
 
-.recipe-ingredients li strong {
-  color: #888;
-  font-weight: normal;
+/* Le <strong> apparaît sur une nouvelle ligne, en gris */
+.recipe-ingredients li > strong {
+  display: block;
+  font-family: Manrope;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 100%;
+  letter-spacing: 0%;
+  color: #7a7a7a;
+  margin-top: 4px;
 }
 
-/* =====================================================
-   4. LIGNE DES FILTRES (SELECTORS)
-===================================================== */
-
-/* Conteneur global des selectors */
+/* =============================
+   5. Filtres et sélection
+============================= */
 #selectors-container {
   display: flex;
   gap: 12px;
@@ -207,13 +214,11 @@ body {
   margin-top: 1rem;
 }
 
-/* Conteneur du selector individuel */
 .selector-container {
   position: relative;
   min-width: 180px;
 }
 
-/* Bouton de sélection */
 .selector-button {
   display: inline-flex;
   align-items: center;
@@ -234,7 +239,6 @@ body {
   background: #f8f8f8;
 }
 
-/* Menu déroulant avec transition fluide */
 .selector-dropdown {
   position: absolute;
   top: 100%;
@@ -256,7 +260,6 @@ body {
   pointer-events: auto;
 }
 
-/* Champ de recherche dans le menu déroulant */
 .selector-search-container {
   position: relative;
   padding: 10px;
@@ -283,8 +286,6 @@ body {
   display: none;
 }
 
-/* Liste des options dans le dropdown :
-   Avec un décalage à gauche et un espace en bas */
 .selector-list {
   list-style: none;
   padding-left: 16px;
@@ -310,13 +311,8 @@ body {
   font-weight: 500;
 }
 
-/* =====================================================
-   5. TAGS DES FILTRES SÉLECTIONNÉS
-===================================================== */
-/* Le conteneur des tags aura le même décalage à gauche et un espace en bas */
 .selected-tags {
   padding-left: 15px;
-
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -345,9 +341,9 @@ body {
   font-size: 16px;
 }
 
-/* =====================================================
-   6. RESPONSIVE (MOBILE)
-===================================================== */
+/* =============================
+   6. Adaptation mobile
+============================= */
 @media (max-width: 768px) {
   .header input[type="text"] {
     height: 50px;

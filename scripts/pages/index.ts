@@ -70,9 +70,7 @@ async function displayData(recipes: Recipe[]): Promise<void> {
   if (!container) return;
 
   // Afficher uniquement les 10 premières recettes
-  const recipeCards = await Promise.all(
-    recipes.slice(0, 10).map(createRecipeCard)
-  );
+  const recipeCards = await Promise.all(recipes.map(createRecipeCard));
   container.innerHTML = recipeCards.join("");
 }
 
