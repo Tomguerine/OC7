@@ -1,8 +1,19 @@
-@import url("variables.css");
+/* ---------------------------------------------
+   0. Importation des polices (Anton, Manrope)
+   et définition des variables CSS
+--------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@400;500;700&display=swap");
 
-/* =============================
+:root {
+  /* Variables personnalisées */
+  --font-text: "Manrope", sans-serif;
+  --color-black: #000000;
+  --max-width: 1200px;
+}
+
+/* ---------------------------------------------
    1. Réglages de base
-============================= */
+--------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -18,15 +29,16 @@ body {
   background-color: #e5e5e5;
 }
 
-/* =============================
+/* ---------------------------------------------
    2. Header + Barre de recherche
-============================= */
+--------------------------------------------- */
 .header {
-  background-color: #fff;
-  padding: 1rem;
+  background: url("../data/background.jpeg") no-repeat center center/cover;
+  min-height: 500px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Alignement à gauche */
   position: relative;
 }
 
@@ -78,9 +90,9 @@ body {
   cursor: pointer;
 }
 
-/* =============================
+/* ---------------------------------------------
    3. Grille de recettes
-============================= */
+--------------------------------------------- */
 #recipe-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -112,7 +124,7 @@ body {
   right: 0.75rem;
   background-color: #ffd700;
   color: var(--color-black);
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 12px;
   line-height: 16.39px;
@@ -145,7 +157,7 @@ body {
 }
 
 .recipe-ingredients-title {
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 700;
   font-size: 12px;
   line-height: 16.39px;
@@ -153,7 +165,7 @@ body {
 }
 
 .recipe-description {
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 19.12px;
@@ -161,9 +173,9 @@ body {
   margin: 0;
 }
 
-/* =============================
+/* ---------------------------------------------
    4. Liste d'ingrédients
-============================= */
+--------------------------------------------- */
 .recipe-ingredients {
   list-style: none;
   padding: 0;
@@ -190,10 +202,9 @@ body {
   text-align: left;
 }
 
-/* Le <strong> apparaît sur une nouvelle ligne, en gris */
 .recipe-ingredients li > strong {
   display: block;
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 100%;
@@ -202,16 +213,23 @@ body {
   margin-top: 4px;
 }
 
-/* =============================
+/* ---------------------------------------------
    5. Filtres et sélection
-============================= */
+   On place les filtres à gauche et le compteur de recettes à droite
+--------------------------------------------- */
+.filters-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  margin-top: 1rem;
+}
+
 #selectors-container {
   display: flex;
   gap: 12px;
   align-items: center;
-  justify-content: left;
-  padding-left: 30px;
-  margin-top: 1rem;
+  /* L'espacement est géré par le parent (.filters-wrapper) */
 }
 
 .selector-container {
@@ -294,7 +312,7 @@ body {
 
 .selector-item {
   padding: 12px 16px;
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 19.12px;
@@ -317,7 +335,7 @@ body {
   gap: 8px;
   flex-wrap: wrap;
   margin: 10px 0 1rem 16px;
-  font-family: Manrope;
+  font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 19.12px;
@@ -341,9 +359,15 @@ body {
   font-size: 16px;
 }
 
-/* =============================
+/* Le compteur de recettes est placé à droite dans la .filters-wrapper */
+.recipe-count-container {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* ---------------------------------------------
    6. Adaptation mobile
-============================= */
+--------------------------------------------- */
 @media (max-width: 768px) {
   .header input[type="text"] {
     height: 50px;
@@ -355,8 +379,15 @@ body {
     font-size: 20px;
   }
 
+  .filters-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 15px;
+  }
+
   #selectors-container {
     flex-direction: column;
+    gap: 8px;
   }
 
   .selector-button {

@@ -1,3 +1,6 @@
+/******************************************************
+ * Interface et variables globales
+ ******************************************************/
 export interface Recipe {
   id: number;
   image: string;
@@ -22,12 +25,17 @@ let allRecipes: Recipe[] = [];
 // false => Version fonctionnelle (optimisée)
 const useImperativeSearch = true;
 
+/******************************************************
+ * Fonctions d'accès aux données
+ ******************************************************/
+// Récupère la liste de recettes depuis un fichier JSON
 async function getRecipes(): Promise<Recipe[]> {
   const response = await fetch("data/recipes.json");
   const data = await response.json();
   return data;
 }
 
+// Tente de charger une image ; en cas d'erreur, renvoie une image de fallback
 async function getImage(imageUrl: string): Promise<string> {
   try {
     const response = await fetch(imageUrl);
@@ -41,6 +49,9 @@ async function getImage(imageUrl: string): Promise<string> {
   }
 }
 
+/******************************************************
+ * Création d’une carte de recette (HTML)
+ ******************************************************/
 async function createRecipeCard(recipe: Recipe): Promise<string> {
   const imageUrl = await getImage(recipe.image);
   return `
@@ -65,16 +76,27 @@ async function createRecipeCard(recipe: Recipe): Promise<string> {
   `;
 }
 
+/******************************************************
+ * Affichage des données (mise à jour de la page)
+ ******************************************************/
 async function displayData(recipes: Recipe[]): Promise<void> {
   const container = document.getElementById("recipe-container");
   if (!container) return;
 
-  // Afficher uniquement les 10 premières recettes
+  // Génération des cartes de recette
   const recipeCards = await Promise.all(recipes.map(createRecipeCard));
   container.innerHTML = recipeCards.join("");
+
+  // Mettre à jour le compteur de recettes
+  const countElement = document.getElementById("recipe-count");
+  if (countElement) {
+    countElement.textContent = `${recipes.length} recettes`;
+  }
 }
 
-/* --- Extraction des valeurs uniques pour les selectors --- */
+/******************************************************
+ * Extraction de valeurs uniques (pour les sélecteurs)
+ ******************************************************/
 function extractUniqueIngredients(recipes: Recipe[]): string[] {
   const ingredientsSet = new Set<string>();
   recipes.forEach((recipe) => {
@@ -103,7 +125,9 @@ function extractUniqueUstensils(recipes: Recipe[]): string[] {
   return Array.from(ustensilsSet).sort();
 }
 
-/* --- Création d'un selector générique --- */
+/******************************************************
+ * Création d’un selector générique
+ ******************************************************/
 function createSelector(title: string, items: string[]): HTMLElement {
   const selectorContainer = document.createElement("div");
   selectorContainer.className = "selector-container";
@@ -141,6 +165,7 @@ function createSelector(title: string, items: string[]): HTMLElement {
     li.textContent = item;
     list.appendChild(li);
 
+    // Lors du clic sur un item, on ajoute un tag
     li.addEventListener("click", (e) => {
       e.stopPropagation();
       const selectedValue = li.textContent || "";
@@ -154,6 +179,7 @@ function createSelector(title: string, items: string[]): HTMLElement {
   });
   dropdown.appendChild(list);
 
+  // Gestion de l’ouverture / fermeture du dropdown
   button.addEventListener("click", (e) => {
     e.stopPropagation();
     selectorContainer.classList.toggle("open");
@@ -162,6 +188,7 @@ function createSelector(title: string, items: string[]): HTMLElement {
     }
   });
 
+  // Filtrage des items du dropdown au fur et à mesure de la saisie
   searchInput.addEventListener("input", () => {
     const filterValue = searchInput.value.toLowerCase();
     const itemsList = list.querySelectorAll("li");
@@ -175,6 +202,7 @@ function createSelector(title: string, items: string[]): HTMLElement {
     clearButton.style.display = filterValue ? "block" : "none";
   });
 
+  // Bouton X pour vider le champ de recherche
   clearButton.addEventListener("click", (e) => {
     e.stopPropagation();
     searchInput.value = "";
@@ -185,6 +213,7 @@ function createSelector(title: string, items: string[]): HTMLElement {
     searchInput.focus();
   });
 
+  // Fermer le dropdown si on clique ailleurs
   document.addEventListener("click", (e) => {
     if (!selectorContainer.contains(e.target as Node)) {
       selectorContainer.classList.remove("open");
@@ -194,9 +223,9 @@ function createSelector(title: string, items: string[]): HTMLElement {
   return selectorContainer;
 }
 
-/* --- Mise à jour des tags sélectionnés --- */
-/* Les tags affichent le type et la valeur.
-   Le type est stocké dans un attribut data-type pour le filtrage. */
+/******************************************************
+ * Mise à jour des tags sélectionnés
+ ******************************************************/
 function updateSelectedTags(type: string, value: string): void {
   const tagContainer = document.querySelector(".selected-tags");
   if (tagContainer) {
@@ -217,7 +246,9 @@ function updateSelectedTags(type: string, value: string): void {
   }
 }
 
-/* --- Version fonctionnelle de la recherche --- */
+/******************************************************
+ * Recherche fonctionnelle (version optimisée)
+ ******************************************************/
 function performSearchFunctional(): void {
   const mainSearchInput = document.getElementById(
     "search-recipe"
@@ -274,7 +305,9 @@ function performSearchFunctional(): void {
   displayData(filteredRecipes);
 }
 
-/* --- Version impérative (moins performante) de la recherche --- */
+/******************************************************
+ * Recherche impérative (version moins performante)
+ ******************************************************/
 function performSearchImperative(): void {
   const mainSearchInput = document.getElementById(
     "search-recipe"
@@ -311,6 +344,7 @@ function performSearchImperative(): void {
       ) {
         matches = true;
       } else {
+        // Vérifie dans la liste des ingrédients
         for (let j = 0; j < recipe.ingredients.length; j++) {
           if (
             recipe.ingredients[j].ingredient
@@ -321,12 +355,14 @@ function performSearchImperative(): void {
             break;
           }
         }
+        // Vérifie l'appareil
         if (
           !matches &&
           recipe.appliance.toLowerCase().indexOf(searchText) !== -1
         ) {
           matches = true;
         }
+        // Vérifie les ustensiles
         if (!matches) {
           for (let k = 0; k < recipe.ustensils.length; k++) {
             if (recipe.ustensils[k].toLowerCase().indexOf(searchText) !== -1) {
@@ -337,7 +373,8 @@ function performSearchImperative(): void {
         }
       }
     } else {
-      matches = true; // Si aucun texte saisi, considérer la recette comme candidate
+      // Si aucun texte saisi, considérer la recette comme candidate
+      matches = true;
     }
 
     // Appliquer les filtres via les tags
@@ -394,7 +431,9 @@ function performSearchImperative(): void {
   displayData(filteredRecipes);
 }
 
-/* --- Fonction de recherche principale --- */
+/******************************************************
+ * Fonction de recherche principale (choix de la version)
+ ******************************************************/
 function performSearch(): void {
   if (useImperativeSearch) {
     performSearchImperative();
@@ -403,14 +442,17 @@ function performSearch(): void {
   }
 }
 
-/* --- Initialisation globale ---
-   Récupère les recettes, les stocke globalement, affiche 10 recettes, et crée les selectors.
-   Ajoute également un écouteur sur le champ principal pour lancer la recherche à la saisie.
-*/
+/******************************************************
+ * Initialisation globale
+ ******************************************************/
 async function init(): Promise<void> {
+  // 1) Charger les recettes
   allRecipes = await getRecipes();
+
+  // 2) Afficher les recettes initiales
   displayData(allRecipes);
 
+  // 3) Construire les sélecteurs (ingrédients, appareils, ustensiles)
   const ingredients = extractUniqueIngredients(allRecipes);
   const appliances = extractUniqueAppliances(allRecipes);
   const ustensils = extractUniqueUstensils(allRecipes);
@@ -426,6 +468,7 @@ async function init(): Promise<void> {
     selectorsContainer.appendChild(ustensilsSelector);
   }
 
+  // 4) Gestion de la recherche principale au fil de la saisie
   const mainSearchInput = document.getElementById(
     "search-recipe"
   ) as HTMLInputElement;
@@ -436,4 +479,5 @@ async function init(): Promise<void> {
   }
 }
 
+// Lancement une fois que le DOM est chargé
 document.addEventListener("DOMContentLoaded", init);
