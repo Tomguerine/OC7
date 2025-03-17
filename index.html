@@ -47,26 +47,25 @@
         alt="Les petits plats"
       />
       <div class="header_cta">
-        <h1>
+        <h1 class="header-title">
           <span>Cherchez parmi plus de 1500 recettes</span>
           <span>du quotidien, simples et délicieuses</span>
         </h1>
-        <div>
+        <div class="search-container">
           <input
             type="text"
             id="search-recipe"
             placeholder="Rechercher une recette, un ingrédient,..."
             maxlength="50"
           />
-          <button aria-hidden="true" aria-label="Clear search"></button>
-          <label
-            for="search-recipe"
-            tabindex="0"
-            aria-label="Search recipe"
-          ></label>
+          <i class="fas fa-search search-icon"></i>
         </div>
       </div>
     </header>
+
+    <div id="selectors-container"></div>
+    <div class="selected-tags"></div>
+
     <main>
       <div id="recipe-container"></div>
       <div class="filter_section">

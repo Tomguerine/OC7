@@ -206,7 +206,7 @@ function updateSelectedTags(type: string, value: string): void {
     tag.classList.add("tag");
     tag.setAttribute("data-type", type.toLowerCase());
     tag.innerHTML = `
-      <span class="tag-type">${type}</span>: <span class="tag-value">${value}</span>
+      <span class="tag-value">${value}</span>
       <button class="remove-tag">X</button>
     `;
     tag.querySelector(".remove-tag")?.addEventListener("click", (e) => {
