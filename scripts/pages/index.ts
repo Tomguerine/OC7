@@ -305,9 +305,6 @@ function performSearchFunctional(): void {
   displayData(filteredRecipes);
 }
 
-/******************************************************
- * Recherche impérative (version moins performante)
- ******************************************************/
 function performSearchImperative(): void {
   const mainSearchInput = document.getElementById(
     "search-recipe"
@@ -339,33 +336,28 @@ function performSearchImperative(): void {
     // Vérification du champ de recherche principal
     if (searchText) {
       if (
-        recipe.name.toLowerCase().indexOf(searchText) !== -1 ||
-        recipe.description.toLowerCase().indexOf(searchText) !== -1
+        recipe.name.toLowerCase().includes(searchText) ||
+        recipe.description.toLowerCase().includes(searchText)
       ) {
         matches = true;
       } else {
         // Vérifie dans la liste des ingrédients
         for (let j = 0; j < recipe.ingredients.length; j++) {
           if (
-            recipe.ingredients[j].ingredient
-              .toLowerCase()
-              .indexOf(searchText) !== -1
+            recipe.ingredients[j].ingredient.toLowerCase().includes(searchText)
           ) {
             matches = true;
             break;
           }
         }
         // Vérifie l'appareil
-        if (
-          !matches &&
-          recipe.appliance.toLowerCase().indexOf(searchText) !== -1
-        ) {
+        if (!matches && recipe.appliance.toLowerCase().includes(searchText)) {
           matches = true;
         }
         // Vérifie les ustensiles
         if (!matches) {
           for (let k = 0; k < recipe.ustensils.length; k++) {
-            if (recipe.ustensils[k].toLowerCase().indexOf(searchText) !== -1) {
+            if (recipe.ustensils[k].toLowerCase().includes(searchText)) {
               matches = true;
               break;
             }
@@ -387,7 +379,7 @@ function performSearchImperative(): void {
             if (
               recipe.ingredients[j].ingredient
                 .toLowerCase()
-                .indexOf(filter.value) !== -1
+                .includes(filter.value)
             ) {
               found = true;
               break;
@@ -398,7 +390,7 @@ function performSearchImperative(): void {
             break;
           }
         } else if (filter.type === "appareils" || filter.type === "appareil") {
-          if (recipe.appliance.toLowerCase().indexOf(filter.value) === -1) {
+          if (!recipe.appliance.toLowerCase().includes(filter.value)) {
             matches = false;
             break;
           }
@@ -408,9 +400,7 @@ function performSearchImperative(): void {
         ) {
           let found = false;
           for (let k = 0; k < recipe.ustensils.length; k++) {
-            if (
-              recipe.ustensils[k].toLowerCase().indexOf(filter.value) !== -1
-            ) {
+            if (recipe.ustensils[k].toLowerCase().includes(filter.value)) {
               found = true;
               break;
             }
