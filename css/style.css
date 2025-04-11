@@ -22,7 +22,6 @@
 
 body {
   margin: 0;
-  padding: 1rem;
   font-family: var(--font-text);
   font-size: 16px;
   color: var(--color-black);
@@ -91,16 +90,27 @@ body {
 }
 
 /* ---------------------------------------------
-   3. Grille de recettes
+   3. Conteneur commun pour filtres et recettes
+--------------------------------------------- */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 30px; /* Espace interne si nécessaire */
+}
+
+/* ---------------------------------------------
+   4. Grille de recettes
 --------------------------------------------- */
 #recipe-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  max-width: var(--max-width);
-  margin: 0 auto;
+  padding: 0 30px;
+
+  /* Ici, le conteneur .container gère le centrage et la largeur maximale */
 }
 
+/* Carte de recette */
 .recipe-card {
   position: relative;
   background: linear-gradient(to bottom, #ffffff, #e7e7e7);
@@ -174,7 +184,7 @@ body {
 }
 
 /* ---------------------------------------------
-   4. Liste d'ingrédients
+   5. Liste d'ingrédients
 --------------------------------------------- */
 .recipe-ingredients {
   list-style: none;
@@ -185,15 +195,11 @@ body {
 }
 
 .recipe-ingredients li {
-  /* Empêche de couper un ingrédient sur deux colonnes */
   break-inside: avoid;
   -webkit-column-break-inside: avoid;
   -moz-column-break-inside: avoid;
-
-  /* Forcer l'empilement vertical du texte et du strong */
   display: flex;
   flex-direction: column;
-
   padding: 0.5rem 0;
   font-size: 14px;
   color: var(--color-black);
@@ -214,22 +220,21 @@ body {
 }
 
 /* ---------------------------------------------
-   5. Filtres et sélection
-   On place les filtres à gauche et le compteur de recettes à droite
+   6. Filtres et sélection
+   Les filtres s’alignent à gauche du conteneur commun
 --------------------------------------------- */
 .filters-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 1rem 0; /* Marge verticale */
   padding: 0 30px;
-  margin-top: 1rem;
 }
 
 #selectors-container {
   display: flex;
   gap: 12px;
   align-items: center;
-  /* L'espacement est géré par le parent (.filters-wrapper) */
 }
 
 .selector-container {
@@ -334,7 +339,7 @@ body {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin: 10px 0 1rem 16px;
+  margin: 10px 0 1rem 0;
   font-family: "Manrope", sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -359,14 +364,13 @@ body {
   font-size: 16px;
 }
 
-/* Le compteur de recettes est placé à droite dans la .filters-wrapper */
 .recipe-count-container {
   font-weight: bold;
   font-size: 1.2rem;
 }
 
 /* ---------------------------------------------
-   6. Adaptation mobile
+   7. Adaptation mobile
 --------------------------------------------- */
 @media (max-width: 768px) {
   .header input[type="text"] {
@@ -379,10 +383,14 @@ body {
     font-size: 20px;
   }
 
+  /* Ajustement du conteneur commun pour mobile */
+  .container {
+    padding: 0 15px;
+  }
+
   .filters-wrapper {
     flex-direction: column;
     align-items: stretch;
-    padding: 0 15px;
   }
 
   #selectors-container {
