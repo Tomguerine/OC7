@@ -17,6 +17,13 @@ export interface Recipe {
   ustensils: string[];
 }
 
+// Fonction de sanitization pour nettoyer les entrées utilisateurs
+function sanitize(input: string): string {
+  const temp = document.createElement("div");
+  temp.textContent = input;
+  return temp.innerHTML;
+}
+
 // Variable globale pour stocker toutes les recettes
 let allRecipes: Recipe[] = [];
 
@@ -78,16 +85,29 @@ async function createRecipeCard(recipe: Recipe): Promise<string> {
 
 /******************************************************
  * Affichage des données (mise à jour de la page)
+ * Si aucune recette n'est trouvée, affiche un message informatif.
  ******************************************************/
-async function displayData(recipes: Recipe[]): Promise<void> {
+async function displayData(
+  recipes: Recipe[],
+  searchText?: string
+): Promise<void> {
   const container = document.getElementById("recipe-container");
   if (!container) return;
 
-  // Génération des cartes de recette
-  const recipeCards = await Promise.all(recipes.map(createRecipeCard));
-  container.innerHTML = recipeCards.join("");
+  if (recipes.length === 0 && searchText) {
+    // Affiche le message d'erreur si aucune recette ne correspond
+    container.innerHTML = `
+      <div class="no-recipes">
+        Aucune recette ne contient <strong>${sanitize(searchText)}</strong>. Vous pouvez chercher "tarte aux pommes", "poisson", etc.
+      </div>
+    `;
+  } else {
+    // Génération des cartes de recette
+    const recipeCards = await Promise.all(recipes.map(createRecipeCard));
+    container.innerHTML = recipeCards.join("");
+  }
 
-  // Mettre à jour le compteur de recettes
+  // Mise à jour du compteur de recettes
   const countElement = document.getElementById("recipe-count");
   if (countElement) {
     countElement.textContent = `${recipes.length} recettes`;
@@ -246,12 +266,17 @@ function updateSelectedTags(type: string, value: string): void {
   }
 }
 
+/******************************************************
+ * Recherche impérative avec sanitization de l'input
+ * et affichage d'un message en cas de résultat vide
+ ******************************************************/
 function performSearchImperative(): void {
   const mainSearchInput = document.getElementById(
     "search-recipe"
   ) as HTMLInputElement;
+  // Sanitization de la saisie utilisateur
   const searchText = mainSearchInput
-    ? mainSearchInput.value.toLowerCase().trim()
+    ? sanitize(mainSearchInput.value.toLowerCase().trim())
     : "";
 
   // Récupération des tags sélectionnés
@@ -282,7 +307,7 @@ function performSearchImperative(): void {
       ) {
         matches = true;
       } else {
-        // Vérifie dans la liste des ingrédients
+        // Vérification dans la liste des ingrédients
         for (let j = 0; j < recipe.ingredients.length; j++) {
           if (
             recipe.ingredients[j].ingredient.toLowerCase().includes(searchText)
@@ -291,11 +316,11 @@ function performSearchImperative(): void {
             break;
           }
         }
-        // Vérifie l'appareil
+        // Vérification de l'appareil
         if (!matches && recipe.appliance.toLowerCase().includes(searchText)) {
           matches = true;
         }
-        // Vérifie les ustensiles
+        // Vérification des ustensiles
         if (!matches) {
           for (let k = 0; k < recipe.ustensils.length; k++) {
             if (recipe.ustensils[k].toLowerCase().includes(searchText)) {
@@ -306,11 +331,11 @@ function performSearchImperative(): void {
         }
       }
     } else {
-      // Si aucun texte saisi, considérer la recette comme candidate
+      // Si aucun texte saisi, la recette est candidate par défaut
       matches = true;
     }
 
-    // Appliquer les filtres via les tags
+    // Application des filtres par tags
     if (matches) {
       for (let f = 0; f < selectedFilters.length; f++) {
         const filter = selectedFilters[f];
@@ -359,7 +384,8 @@ function performSearchImperative(): void {
     }
   }
 
-  displayData(filteredRecipes);
+  // Affichage des résultats en passant la saisie utilisateur pour le message éventuel
+  displayData(filteredRecipes, searchText);
 }
 
 /******************************************************
